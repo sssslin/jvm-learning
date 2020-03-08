@@ -1,6 +1,5 @@
 package com.shengsiyuan.jvm.classloader;
 
-
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -12,6 +11,12 @@ public class MyTest16 extends ClassLoader {
     private String classLoaderName;
 
     private final String fileExtension = ".class";
+
+    private String path;
+
+    public void setPath(String path) {
+        this.path = path;
+    }
 
     public MyTest16(String classLoaderName) {
         super(); // 将系统类加载器当做该类加载器的父加载器
@@ -30,6 +35,10 @@ public class MyTest16 extends ClassLoader {
 
     @Override
     protected Class<?> findClass(String className) throws ClassNotFoundException {
+
+        System.out.println("findClass invoked:" + className);
+        System.out.println("class loader name:" + this.classLoaderName);
+
         byte[] data = this.loadClassData(className);
         return this.defineClass(className, data, 0, data.length);
     }
@@ -39,10 +48,11 @@ public class MyTest16 extends ClassLoader {
         byte[] data = null;
         ByteArrayOutputStream baos = null;
 
+        className = className.replace(".", "\\");
         try {
             this.classLoaderName = this.classLoaderName.replace(".", "\\");
 
-            is = new FileInputStream(new File(className + this.fileExtension));
+            is = new FileInputStream(new File(this.path + className + this.fileExtension));
             baos = new ByteArrayOutputStream();
 
             int ch = 0;
@@ -65,15 +75,25 @@ public class MyTest16 extends ClassLoader {
         return data;
     }
 
-    public static void test(ClassLoader classLoader) throws Exception {
-        Class<?> clazz = classLoader.loadClass("com.shengsiyuan.jvm.classloader.MyTest1");
-        Object object = clazz.newInstance();
-
-        System.out.println(object);
-    }
-
     public static void main(String[] args) throws Exception {
         MyTest16 loader1 = new MyTest16("loader1");
-        test(loader1);
+       // loader1.setPath("D:\\DownloadAndData\\private\\Java\\jvm-learning\\target\\classes\\");
+        loader1.setPath("C:\\Users\\MrLin\\Desktop\\");
+        Class<?> clazz = loader1.loadClass("com.shengsiyuan.jvm.classloader.MyTest1");
+        System.out.println("class:" + clazz.hashCode());
+        Object object = clazz.newInstance();
+        System.out.println(object);
+
+        System.out.println();
+
+        MyTest16 loader2 = new MyTest16("loader2");
+        loader2.setPath("C:\\Users\\MrLin\\Desktop\\");
+
+        Class<?> clazz2 = loader2.loadClass("com.shengsiyuan.jvm.classloader.MyTest1");
+        System.out.println("class:" + clazz.hashCode());
+        Object object2 = clazz2.newInstance();
+        System.out.println(object2);
+
+        System.out.println();
     }
 }
