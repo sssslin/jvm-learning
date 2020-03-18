@@ -4,7 +4,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
-import java.util.Objects;
 
 public class MyTest16 extends ClassLoader {
 
@@ -23,15 +22,19 @@ public class MyTest16 extends ClassLoader {
         this.classLoaderName = classLoaderName;
     }
 
+    public MyTest16(ClassLoader parent) {
+        super(parent);
+    }
     public MyTest16(ClassLoader parent, String classLoaderName) {
         super(parent); // 显式指定该类加载器的父加载器
         this.classLoaderName = classLoaderName;
     }
 
-    @Override
-    public String toString() {
-        return "["+ this.classLoaderName + "]";
-    }
+    // 如果不注释这行,则虚拟机将会隐式的调用这个方法,把类加载器名称打印成数组的形式.
+//    @Override
+//    public String toString() {
+//        return "[" + this.classLoaderName + "]";
+//    }
 
     @Override
     protected Class<?> findClass(String className) throws ClassNotFoundException {
@@ -77,7 +80,7 @@ public class MyTest16 extends ClassLoader {
 
     public static void main(String[] args) throws Exception {
         MyTest16 loader1 = new MyTest16("loader1");
-       // loader1.setPath("D:\\DownloadAndData\\private\\Java\\jvm-learning\\target\\classes\\");
+        // loader1.setPath("D:\\DownloadAndData\\private\\Java\\jvm-learning\\target\\classes\\");
         loader1.setPath("C:\\Users\\MrLin\\Desktop\\");
         Class<?> clazz = loader1.loadClass("com.shengsiyuan.jvm.classloader.MyTest1");
         System.out.println("class:" + clazz.hashCode());
@@ -86,14 +89,41 @@ public class MyTest16 extends ClassLoader {
 
         System.out.println();
 
-        MyTest16 loader2 = new MyTest16("loader2");
-        loader2.setPath("C:\\Users\\MrLin\\Desktop\\");
+        loader1 = null;
+        clazz = null;
+        object = null;
 
-        Class<?> clazz2 = loader2.loadClass("com.shengsiyuan.jvm.classloader.MyTest1");
+        System.gc();
+
+       // Thread.sleep(2000000);
+
+        loader1 = new MyTest16("loader1");
+        loader1.setPath("C:\\Users\\MrLin\\Desktop\\");
+        clazz = loader1.loadClass("com.shengsiyuan.jvm.classloader.MyTest1");
         System.out.println("class:" + clazz.hashCode());
-        Object object2 = clazz2.newInstance();
-        System.out.println(object2);
+        object = clazz.newInstance();
+        System.out.println(object);
 
         System.out.println();
+//        MyTest16 loader2 = new MyTest16(loader1, "loader2");
+//        loader2.setPath("C:\\Users\\MrLin\\Desktop\\");
+//
+//        Class<?> clazz2 = loader2.loadClass("com.shengsiyuan.jvm.classloader.MyTest1");
+//        System.out.println("class:" + clazz.hashCode());
+//        Object object2 = clazz2.newInstance();
+//        System.out.println(object2);
+//
+//        System.out.println();
+//
+//        MyTest16 loader3 = new MyTest16("loader3");
+//        loader3.setPath("C:\\Users\\MrLin\\Desktop\\");
+//
+//        Class<?> clazz3 = loader3.loadClass("com.shengsiyuan.jvm.classloader.MyTest1");
+//        System.out.println("class:" + clazz.hashCode());
+//        Object object3 = clazz3.newInstance();
+//        System.out.println(object2);
+//
+//        System.out.println();
+
     }
 }
