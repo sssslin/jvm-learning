@@ -46,7 +46,7 @@ public class MyTest1 {
         // -XX:-UseGCOverheadLimit
         for (; ; ) {
             list.add(new MyTest1());
-            System.gc();
+           //  System.gc();
         }
     }
 }
