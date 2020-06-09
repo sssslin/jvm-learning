@@ -41,7 +41,7 @@ import java.util.List;
 public class MyTest1 {
 
     public static void main(String[] args) {
-        List<MyTest1> list = new ArrayList<>();
+        List<MyTest1> list = new ArrayList<MyTest1>();
         // 比课程中多使用这么一个参数,才会出现一样的效果
         // -XX:-UseGCOverheadLimit
         for (; ; ) {
