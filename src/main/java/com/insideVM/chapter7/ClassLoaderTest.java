@@ -1,6 +1,6 @@
 package com.insideVM.chapter7;
 
-import sun.security.util.Length;
+
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -32,7 +32,7 @@ public class ClassLoaderTest {
                 }
             }
         };
-
+        // 由不同的类加载器加载，所以即使是一样的class文件，由于命名空间不同，比对结果仍然是false
         Object obj = myLoader.loadClass("com.insideVM.chapter7.ClassLoaderTest").newInstance();
         System.out.println(obj.getClass());
         System.out.println(obj instanceof com.insideVM.chapter7.ClassLoaderTest);

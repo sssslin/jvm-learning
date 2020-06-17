@@ -24,6 +24,7 @@ public class FieldResolution {
     }
 
     static class Sub extends Parent implements Interface2 {
+        // 假如注释掉以下这行代码，将会出现菱形继承问题，所以javac编译器拒绝编译
         public static int A = 4;
     }
 
